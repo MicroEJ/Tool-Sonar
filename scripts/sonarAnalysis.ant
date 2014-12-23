@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ANT Buildfile
+ 
+  Copyright 2014 IS2T. All rights reserved.
+  IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<project name="project.analysis" default="sonar:analysis">
+
+	<dirname property="ant.dir.project.analysis" file="${ant.file.project.analysis}" />
+	<property name="workspace" value="${ant.dir.project.analysis}/../.." />
+	
+	<import file="sonar.ant" />
+	
+	<target name="project/definition" extensionOf="sonar:product-definition">
+		<path id="project.src.path">
+			<pathelement location="${workspace}/MyMVCSample/src/" />
+		</path>
+		<property name="sonar.projectName" value="MyMVCSample"/>
+		<property name="sonar.projectKey" value="com.is2t:${sonar.projectName}"/>
+		<property name="sonar.projectVersion" value="1.0.0"/>
+		
+		<property name="sonar.language" value="java"/>
+		<pathconvert property="sonar.sources" refid="project.src.path" pathsep=","/> <!-- Sonar expect ',' separated list of directories -->
+	</target>
+
+</project>

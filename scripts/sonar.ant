@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Ant
+	
+	Copyright 2011-2014 IS2T. All rights reserved.
+	IS2T PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+-->
+<project name="sonar" xmlns:sonar="antlib:org.sonar.ant">
+	
+	<target name="sonar:init">
+		<dirname file="${ant.file.sonar}" property="ant.dir.sonar" />
+		<property name="libs.location" location="${ant.dir.sonar}/../lib" />
+		<property name="rules.location" location="${ant.dir.sonar}/../rules" />
+
+		<!-- sonar server properties -->
+		<property name="sonar.name" value="sonar" />
+		<property name="sonar.version" value="3.7.4" />
+		<property name="sonar.archive" location="${libs.location}/sonar/${sonar.name}-${sonar.version}.zip" />
+		<property name="sonar.install-location" location="${user.home}/.sonar-server" />
+		<property name="sonar.location" location="${sonar.install-location}/${sonar.name}-${sonar.version}" />
+		
+		<condition property="os.folder" value="linux-x86-32">
+			<os family="unix" arch="i386" />
+		</condition>
+		<condition property="os.folder" value="linux-x86-64">
+			<os family="unix" arch="amd64" />
+		</condition>
+		<condition property="os.folder" value="windows-x86-32">
+			<os family="windows" arch="x86" />
+		</condition>
+		<condition property="os.folder" value="macosx-universal-64">
+			<os family="mac" />
+		</condition>
+		
+		<fail message="OS not supported: ${os.family} ${os.arch}">
+			<condition>
+				<not>
+					<and>
+						<isset property="os.folder" />
+					</and>
+				</not>
+			</condition>
+		</fail>
+		<property name="sonar.bin-location" location="${sonar.location}/bin/${os.folder}" />
+		
+		<property name="sonar.host.ip" value="localhost" />
+		<property name="sonar.jdbc.url" value="jdbc:h2:tcp://${sonar.host.ip}:9092/sonar" />
+		<property name="sonar.host.url" value="http://${sonar.host.ip}:9000" />
+
+		<!-- sonar client properties -->
+		<property name="sonar.jar" location="${libs.location}/sonar/sonar-ant-task-2.1.jar" />
+		<taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml" classpath="${sonar.jar}" />
+		
+		<property name="sonar.jdbc.username" value="sonar" />
+		<property name="sonar.jdbc.password" value="sonar" />
+		
+		<property name="sonar.basedir" location="sonarbasedir~" />
+		<mkdir dir="${sonar.basedir}"/>
+		<property name="sonar.working.directory" location="sonar~" />
+		<mkdir dir="${sonar.working.directory}" />
+
+		<!-- http client -->
+		<property name="ant-http.jar" location="${libs.location}/ml-ant-http/ml-ant-http-1.1.3.jar" />
+		<taskdef name="http" classname="org.missinglink.ant.task.http.HttpClientTask" classpath="${ant-http.jar}" />
+
+		<property name="microej.profile.file" location="${rules.location}/MicroEJ_rules.xml" />
+	</target>
+
+	<target name="sonar:installcheck" depends="sonar:init">
+		<condition property="sonar.installed" value="true">
+			<available file="${sonar.location}"/>
+		</condition>
+	</target>
+	<target name="sonar:install" depends="sonar:init,sonar:installcheck" unless="sonar.installed">
+		<unzip src="${sonar.archive}" dest="${sonar.install-location}" />
+		<chmod dir="${sonar.location}/bin/" includes="**/*" perm="a+x" />
+	</target>
+	
+	<target name="sonar:runcheck">
+		<condition property="sonar.running" value="true">
+			<http url="${sonar.host.url}" />
+		</condition>
+	</target>
+	<target name="sonar:run" depends="sonar:install,sonar:runcheck" unless="sonar.running">
+		<!-- start the server -->
+		<exec executable="cmd" osfamily="windows" spawn="true">
+			<arg line="/c ${sonar.bin-location}/StartSonar.bat" />
+		</exec>
+		<exec executable="${sonar.bin-location}/sonar.sh" osfamily="unix">
+			<arg line="start" />
+		</exec>
+		<!-- wait for the server to be available -->
+		<waitfor maxwait="1" maxwaitunit="minute">
+			<http url="${sonar.host.url}" />
+		</waitfor>
+		<fail>
+			<condition>
+				<not>
+					<http url="${sonar.host.url}" />
+				</not>
+			</condition>
+		</fail>
+		
+		<!-- import MicroEJ profile in this new instance -->
+		<!-- create a file with http content headers as long as multipart content is not supported by the ant task -->
+		<tempfile property="entity.file" destdir="${java.io.tmpdir}" />
+		<concat destfile="${entity.file}" append="true">------------------------------532977bb6bb3
+Content-Disposition: form-data; name="backup"; filename="backup"
+Content-Type: application/octet-stream
+
+</concat>
+		<concat destfile="${entity.file}" append="true"><path path="${microej.profile.file}"/></concat>
+		<concat destfile="${entity.file}" append="true">
+
+------------------------------532977bb6bb3--
+</concat>
+		<fixcrlf file="${entity.file}" eol="crlf" />
+
+		<http url="${sonar.host.url}/api/profiles/restore" method="POST">
+			<credentials username="admin" password="admin" />
+			<headers>
+				<header name="Content-Type" value="multipart/form-data; boundary=----------------------------532977bb6bb3" />
+			</headers>
+			<entity file="${entity.file}" binary="true" />
+		</http>
+		<http url="${sonar.host.url}/api/profiles/set_as_default" method="POST">
+			<credentials username="admin" password="admin" />
+			<query>
+				<parameter name="language" value="java" />
+				<parameter name="name" value="MicroEJ" />
+			</query>
+		</http>
+	</target>
+	
+	<extension-point name="sonar:product-definition" />
+	
+	<target name="sonar:analysis" depends="sonar:run,sonar:product-definition">
+		<sonar:sonar/>
+	</target>
+	
+</project>
+
+
