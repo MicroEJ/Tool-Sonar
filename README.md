@@ -1,5 +1,5 @@
 # Overview
-This project presents how to run the SonarQube��� source code quality analyzer on a MicroEJ Java project.
+This project presents how to run the SonarQube™ source code quality analyzer on a MicroEJ Java project.
 This project installs and runs a local SonarQube server and provides locally a report holding the code inspection.
 
 SonarQube is a an open source platform for continuous inspection of code quality. SonarQube offers reports on duplicated code, coding standards, unit tests, code coverage, code complexity, potential bugs, comments and architecture.
@@ -31,7 +31,7 @@ You can either runs the SonarQube analysis on one of the MicroEJ java example (s
 - Launch MicroEJ.
 - File->Import->General->Existing project into workspace: import ExampleTool-Sonar folder.
 - Edit the configuration (/scripts/sonarAnalysis.ant) as described in the configuration section if needed.
-- Right-click on scripts/sonarAnalysis.ant->Run as���->Ant build.
+- Right-click on scripts/sonarAnalysis.ant->Run as…->Ant build.
 - The report can be viewed at http://localhost:9000/dashboard/index/com.is2t:MyMVCSample (note: adapt the path to match your project's name if required).
 
 ## Changes
