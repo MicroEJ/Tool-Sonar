@@ -5,7 +5,7 @@
 	Copyright 2011-2014 IS2T. All rights reserved.
 	Use of this source code is governed by a BSD-style license that can be found at http://www.is2t.com/open-source-bsd-license/.
 -->
-<project name="sonar" xmlns:sonar="antlib:org.sonar.ant">
+<project name="sonar" xmlns:sonar="antlib:org.sonar.ant" default="sonar:run">
 	
 	<target name="sonar:init">
 		<dirname file="${ant.file.sonar}" property="ant.dir.sonar" />
@@ -130,12 +130,6 @@ Content-Type: application/octet-stream
 				<parameter name="name" value="MicroEJ" />
 			</query>
 		</http>
-	</target>
-	
-	<extension-point name="sonar:product-definition" />
-	
-	<target name="sonar:analysis" depends="sonar:run,sonar:product-definition">
-		<sonar:sonar/>
 	</target>
 	
 </project>

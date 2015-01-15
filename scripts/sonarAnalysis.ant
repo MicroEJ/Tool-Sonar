@@ -5,14 +5,15 @@
 	Copyright 2014 IS2T. All rights reserved.
 	Use of this source code is governed by a BSD-style license that can be found at http://www.is2t.com/open-source-bsd-license/.
 -->
-<project name="project.analysis" default="sonar:analysis">
+<project name="project.analysis" xmlns:sonar="antlib:org.sonar.ant" default="sonar:analysis">
 
 	<dirname property="ant.dir.project.analysis" file="${ant.file.project.analysis}" />
 	<property name="workspace" value="${ant.dir.project.analysis}/../.." />
 	
-	<import file="sonar.ant" />
+	<import file="sonarServer.ant" />
 	
-	<target name="project/definition" extensionOf="sonar:product-definition">
+	<target name="sonar:analysis" depends="sonar:run">
+		<!-- define project properties -->
 		<path id="project.src.path">
 			<pathelement location="${workspace}/MyMVCSample/src/" />
 		</path>
@@ -22,6 +23,9 @@
 		
 		<property name="sonar.language" value="java"/>
 		<pathconvert property="sonar.sources" refid="project.src.path" pathsep=","/> <!-- Sonar expect ',' separated list of directories -->
+		
+		<!-- launch analysis -->
+		<sonar:sonar/>
 	</target>
 
 </project>

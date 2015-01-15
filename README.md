@@ -28,11 +28,17 @@ You can either runs the SonarQube analysis on one of the MicroEJ java example (s
 - sonar.projectVersion.
 
 ## Usage
+### Launch an analysis
 - Launch MicroEJ.
 - File->Import->General->Existing project into workspace: import ExampleTool-Sonar folder.
 - Edit the configuration (/scripts/sonarAnalysis.ant) as described in the configuration section if needed.
 - Right-click on scripts/sonarAnalysis.ant->Run as…->Ant build.
+- The server is automatically started.
 - The report can be viewed at http://localhost:9000/dashboard/index/com.is2t:MyMVCSample (note: adapt the path to match your project's name if required).
+
+### Launch the server
+- Right-click on scripts/sonarServer.ant->Run as…->Ant build.
+- All your previous analysis are available at http://localhost:9000/.
 
 ## Changes
 - Initial version.
