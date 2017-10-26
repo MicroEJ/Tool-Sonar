@@ -14,11 +14,14 @@
 	
 	<target name="sonar:analysis" depends="sonar:run">
 		<!-- define project properties -->
-		<path id="project.src.path">
-			<pathelement location="${workspace}/MyMVCSample/src/" />
-		</path>
+		
 		<property name="sonar.projectName" value="MyMVCSample"/>
-		<property name="sonar.projectKey" value="com.is2t:${sonar.projectName}"/>
+		
+		<path id="project.src.path">
+			<pathelement location="${workspace}/${sonar.projectName}/src/" />
+		</path>
+		
+		<property name="sonar.projectKey" value="com.microej:${sonar.projectName}"/>
 		<property name="sonar.projectVersion" value="1.0.0"/>
 		
 		<property name="sonar.language" value="java"/>

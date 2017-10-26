@@ -28,6 +28,9 @@
 		<condition property="os.folder" value="windows-x86-32">
 			<os family="windows" arch="x86" />
 		</condition>
+		<condition property="os.folder" value="windows-x86-64">
+			<os family="windows" arch="amd64" />
+		</condition>
 		<condition property="os.folder" value="macosx-universal-64">
 			<os family="mac" />
 		</condition>
