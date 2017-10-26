@@ -15,16 +15,23 @@
 	<target name="sonar:analysis" depends="sonar:run">
 		<!-- define project properties -->
 		
-		<property name="sonar.projectName" value="MyMVCSample"/>
-		
+		<!-- Location --> 
+		<property name="project.location" value="${workspace}"/> 
+		<!-- Name -->
+		<property name="sonar.projectName" value="MySample"/>
+		 
 		<path id="project.src.path">
-			<pathelement location="${workspace}/${sonar.projectName}/src/" />
+			<pathelement location="${project.location}/${sonar.projectName}/src" />
 		</path>
 		
+		<property name="sonar.projectBaseDir" value="${project.location}/${sonar.projectName}/src"/>
+	
 		<property name="sonar.projectKey" value="com.microej:${sonar.projectName}"/>
 		<property name="sonar.projectVersion" value="1.0.0"/>
 		
 		<property name="sonar.language" value="java"/>
+		<property name="sonar.java.source" value="1.7"/> <!-- for PMD plugin compatibility -->
+		
 		<pathconvert property="sonar.sources" refid="project.src.path" pathsep=","/> <!-- Sonar expect ',' separated list of directories -->
 		
 		<!-- launch analysis -->

@@ -13,8 +13,8 @@
 		<property name="rules.location" location="${ant.dir.sonar}/../rules" />
 
 		<!-- sonar server properties -->
-		<property name="sonar.name" value="sonar" />
-		<property name="sonar.version" value="3.7.4" />
+		<property name="sonar.name" value="sonarqube" />
+		<property name="sonar.version" value="5.6.7" /> 
 		<property name="sonar.archive" location="${libs.location}/sonar/${sonar.name}-${sonar.version}.zip" />
 		<property name="sonar.install-location" location="${user.home}/.sonar-server" />
 		<property name="sonar.location" location="${sonar.install-location}/${sonar.name}-${sonar.version}" />
@@ -51,7 +51,7 @@
 		<property name="sonar.host.url" value="http://${sonar.host.ip}:9000" />
 
 		<!-- sonar client properties -->
-		<property name="sonar.jar" location="${libs.location}/sonar/sonar-ant-task-2.1.jar" />
+		<property name="sonar.jar" location="${libs.location}/sonar/sonar-ant-task-2.2.jar" />
 		<taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml" classpath="${sonar.jar}" />
 		
 		<property name="sonar.jdbc.username" value="sonar" />
@@ -129,7 +129,6 @@ Content-Type: application/octet-stream
 		<http url="${sonar.host.url}/api/profiles/set_as_default" method="POST">
 			<credentials username="admin" password="admin" />
 			<query>
-				<parameter name="language" value="java" />
 				<parameter name="name" value="MicroEJ" />
 			</query>
 		</http>
