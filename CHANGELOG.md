@@ -2,6 +2,7 @@
 Features:
   * M0127CC-67 : Update to Sonar 5.6.7
   * M0127CC-67 : Update to latest Rules
+  * M0127CC-67 : Add process to use sonar on easy ant builds
  
 ## 1.0.1 (2017-10-26)
 Bugfixes:

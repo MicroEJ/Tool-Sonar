@@ -37,6 +37,18 @@ Open the [sonarAnalysis.ant](scripts/sonarAnalysis.ant) file, edit it to match t
 - Right-click on scripts/sonarServer.ant->Run as…->Ant build.
 - All your previous analysis are available at http://localhost:9000/.
 
+### Execute sonar when building project
+MicroEJ's build types can execute sonar when being executed. By default the functionality is turned off to enable it:
+- Launch the server
+- In **Window->Preferences->Ant->Runtime**
+- Go to **Properties** tab
+- Remove `sonar.skip` properties
+- Add `sonar.login` property with value `admin`
+- Add `sonar.password` property with value `admin`
+
+Now when a MicroEJ project is build using easyant (right-click on the project -> Build with EasyAnt), the sonar server will be populated.
+
+
 <!--
 	Markdown
 	
