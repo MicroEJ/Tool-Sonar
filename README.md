@@ -42,7 +42,7 @@ MicroEJ's build types can execute sonar when being executed. By default the func
 - Launch the server
 - In **Window->Preferences->Ant->Runtime**
 - Go to **Properties** tab
-- Remove `sonar.skip` properties
+- Remove `sonar.skip` property
 - Add `sonar.login` property with value `admin`
 - Add `sonar.password` property with value `admin`
 
