@@ -2,8 +2,8 @@
 <!--
 	Ant
 	
-	Copyright 2011-2014 IS2T. All rights reserved.
-	Use of this source code is governed by a BSD-style license that can be found at http://www.is2t.com/open-source-bsd-license/.
+	Copyright 2011-2019 IS2T. All rights reserved.
+	IS2T PROPRIETARY. Use is subject to license terms.
 -->
 <project name="sonar" xmlns:sonar="antlib:org.sonar.ant" default="sonar:run">
 	
@@ -19,6 +19,9 @@
 		<property name="sonar.install-location" location="${user.home}/.sonar-server" />
 		<property name="sonar.location" location="${sonar.install-location}/${sonar.name}-${sonar.version}" />
 		
+		<condition property="os.folder" value="windows-x86-64">
+			<os arch="amd64" />
+		</condition>
 		<condition property="os.folder" value="linux-x86-32">
 			<os family="unix" arch="i386" />
 		</condition>
@@ -27,9 +30,6 @@
 		</condition>
 		<condition property="os.folder" value="windows-x86-32">
 			<os family="windows" arch="x86" />
-		</condition>
-		<condition property="os.folder" value="windows-x86-64">
-			<os family="windows" arch="amd64" />
 		</condition>
 		<condition property="os.folder" value="macosx-universal-64">
 			<os family="mac" />
@@ -87,7 +87,7 @@
 	<target name="sonar:run" depends="sonar:install,sonar:runcheck" unless="sonar.running">
 		<!-- start the server -->
 		<exec executable="cmd" osfamily="windows" spawn="true">
-			<arg line="/c ${sonar.bin-location}/StartSonar.bat" />
+			<arg line="/c '${sonar.bin-location}/StartSonar.bat'" />
 		</exec>
 		<exec executable="${sonar.bin-location}/sonar.sh" osfamily="unix">
 			<arg line="start" />
@@ -126,10 +126,11 @@ Content-Type: application/octet-stream
 			</headers>
 			<entity file="${entity.file}" binary="true" />
 		</http>
-		<http url="${sonar.host.url}/api/profiles/set_as_default" method="POST">
+		<http url="${sonar.host.url}/api/qualityprofiles/set_default" method="POST" expected="204">
 			<credentials username="admin" password="admin" />
 			<query>
-				<parameter name="name" value="MicroEJ" />
+				<parameter name="profileName" value="MicroEJ" />
+				<parameter name="language" value="java" />
 			</query>
 		</http>
 	</target>

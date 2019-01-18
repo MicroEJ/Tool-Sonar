@@ -2,8 +2,8 @@
 <!--
 	Ant
 	
-	Copyright 2014 IS2T. All rights reserved.
-	Use of this source code is governed by a BSD-style license that can be found at http://www.is2t.com/open-source-bsd-license/.
+	Copyright 2014-2019 IS2T. All rights reserved.
+	IS2T PROPRIETARY. Use is subject to license terms.
 -->
 <project name="project.analysis" xmlns:sonar="antlib:org.sonar.ant" default="sonar:analysis">
 
@@ -14,21 +14,21 @@
 	
 	<target name="sonar:analysis" depends="sonar:run">
 		<!-- define project properties -->
+		<property name="sonar.projectOrg" value="com.microej"/>
+		<property name="sonar.projectName" value="My Project Name"/>
+		<property name="sonar.projectVersion" value="1.0.0"/>
 		
 		<!-- Location --> 
 		<property name="project.location" value="${workspace}"/> 
 		<!-- Name -->
-		<property name="sonar.projectName" value="MySample"/>
-		 
 		<path id="project.src.path">
 			<pathelement location="${project.location}/${sonar.projectName}/src" />
 		</path>
 		
 		<property name="sonar.projectBaseDir" value="${project.location}/${sonar.projectName}/src"/>
 	
-		<property name="sonar.projectKey" value="com.microej:${sonar.projectName}"/>
-		<property name="sonar.projectVersion" value="1.0.0"/>
 		
+		<property name="sonar.projectKey" value="${sonar.projectOrg}:${sonar.projectName}"/>
 		<property name="sonar.language" value="java"/>
 		<property name="sonar.java.source" value="1.7"/> <!-- for PMD plugin compatibility -->
 		
