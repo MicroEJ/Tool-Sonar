@@ -9,6 +9,7 @@ SonarQube is available at www.sonarqube.org.
 ### Requirements
 - JRE 7 x86 or later.
 - MicroEJ 3.0 or later.
+- SonarQube 5.6.7 (see Usage/Provide SonarQube 5.6.7)
 
 ### Project structure
 - [lib/](lib): SonarQube server & client, HTTP ant task.
@@ -25,6 +26,10 @@ Open the [sonarAnalysis.ant](scripts/sonarAnalysis.ant) file, edit it to match t
 - `sonar.projectVersion`: the project's version.
 
 ## Usage
+### Provide SonarQube 5.6.7
+- Download [sonarqube-5.6.7.zip](https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-5.6.7.zip)
+- Put it in [lib/sonar/](lib/sonar)
+
 ### Launch an analysis
 - Launch MicroEJ.
 - File->Import->General->Existing project into workspace: import ExampleTool-Sonar folder.
@@ -51,7 +56,7 @@ Now when a MicroEJ project is built using EasyAnt (right-click on the project ->
 
 <!--
 	Markdown
-	
+
 	Copyright 2015-2019 IS2T. All rights reserved.
 	IS2T PROPRIETARY. Use is subject to license terms.
 -->
