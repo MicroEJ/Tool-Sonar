@@ -20,16 +20,16 @@
 		<property name="sonar.location" location="${sonar.install-location}/${sonar.name}-${sonar.version}" />
 		
 		<condition property="os.folder" value="windows-x86-64">
-			<os arch="amd64" />
+			<os family="windows" arch="amd64" />
+		</condition>
+		<condition property="os.folder" value="windows-x86-32">
+			<os family="windows" arch="x86" />
 		</condition>
 		<condition property="os.folder" value="linux-x86-32">
 			<os family="unix" arch="i386" />
 		</condition>
 		<condition property="os.folder" value="linux-x86-64">
 			<os family="unix" arch="amd64" />
-		</condition>
-		<condition property="os.folder" value="windows-x86-32">
-			<os family="windows" arch="x86" />
 		</condition>
 		<condition property="os.folder" value="macosx-universal-64">
 			<os family="mac" />
