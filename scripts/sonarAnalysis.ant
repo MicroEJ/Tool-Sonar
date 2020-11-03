@@ -1,36 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Ant
-	
-	Copyright 2014-2019 IS2T. All rights reserved.
-	IS2T PROPRIETARY. Use is subject to license terms.
+
+	Copyright 2014-2020 MicroEJ Corp. All rights reserved.
+	Use of this source code is governed by a BSD-style license that can be found with this software.
 -->
-<project name="project.analysis" xmlns:sonar="antlib:org.sonar.ant" default="sonar:analysis">
+<project name="project.analysis" xmlns:sonar="antlib:org.sonar.ant" xmlns:ivy="antlib:org.apache.ivy.ant" default="sonar:analysis">
 
 	<dirname property="ant.dir.project.analysis" file="${ant.file.project.analysis}" />
 	<property name="workspace" value="${ant.dir.project.analysis}/../.." />
-	
-	<import file="sonarServer.ant" />
-	
-	<target name="sonar:analysis" depends="sonar:run">
-		<!-- define project properties -->
-		<property name="sonar.projectBaseDir" value="${workspace}"/>
-		<property name="sonar.projectOrg" value="com.myorganization"/>
-		<property name="sonar.projectName" value="myProject"/>
-		<property name="sonar.projectVersion" value="1.0.0"/>
+	<property name="libs.location" location="${ant.dir.project.analysis}/../lib" />
+
+	<target name="sonar:properties">
+		<property file="${ant.dir.project.analysis}/sonarAnalysis.properties" />
+	</target>
+
+	<target name="sonar:init" depends="sonar:properties">
+		<fail message="Please set `sonar.projectBaseDir` property that references the project to analyse.">
+			<condition>
+				<not>
+					<and>
+						<isset property="sonar.projectBaseDir" />
+						<resourceexists>
+							<file file="${sonar.projectBaseDir}"/>
+						</resourceexists>
+					</and>
+				</not>
+			</condition>
+		</fail>
+		<fail message="SonarQube server ${sonar.host.url} is not running/accessible.">
+			<condition>
+				<not>
+					<http url="${sonar.host.url}" />
+				</not>
+			</condition>
+		</fail>
+	</target>
+
 		
-		<!-- Name -->
-		<path id="project.src.path">
-			<pathelement location="${sonar.projectBaseDir}/${sonar.projectName}/src" />
-		</path>
+	<target name="sonar:rules" depends="sonar:properties, sonar:init">
+		<property name="microej.profile.file" location="${ant.dir.project.analysis}/../rules/MicroEJ_rules.xml"/>
 		
-		<property name="sonar.projectKey" value="${sonar.projectOrg}:${sonar.projectName}"/>
+		<!-- Http client -->
+		<property name="ant-http.jar" location="${libs.location}/ml-ant-http/ml-ant-http-1.1.3.jar" />
+		<taskdef name="http" classname="org.missinglink.ant.task.http.HttpClientTask" classpath="${ant-http.jar}" />
+
+		<!-- Import MicroEJ profile -->
+		<!-- Create a file with http content headers as long as multipart content is not supported by the ant task -->
+		<tempfile property="entity.file" destdir="${java.io.tmpdir}" />
+		<concat destfile="${entity.file}" append="true">------------------------------532977bb6bb3
+Content-Disposition: form-data; name="backup"; filename="backup"
+Content-Type: application/octet-stream
+
+</concat>
+		<concat destfile="${entity.file}" append="true"><path path="${microej.profile.file}"/></concat>
+		<concat destfile="${entity.file}" append="true">
+
+------------------------------532977bb6bb3--
+</concat>
+		<fixcrlf file="${entity.file}" eol="crlf" />
+
+		<http url="${sonar.host.url}/api/qualityprofiles/restore" method="POST">
+			<credentials username="${sonar.login}" />
+			<headers>
+				<header name="Content-Type" value="multipart/form-data; boundary=----------------------------532977bb6bb3" />
+			</headers>
+			<entity file="${entity.file}" binary="true" />
+		</http>
+		<http url="${sonar.host.url}/api/qualityprofiles/set_default" method="POST" expected="204">
+			<credentials username="${sonar.login}" />
+			<query>
+				<parameter name="qualityProfile" value="MicroEJ" />
+				<parameter name="language" value="java" />
+			</query>
+		</http>
+	</target>
+
+	<target name="sonar:tasks">
+		<property name="ivy.jar" location="${libs.location}/ivy/ivy-2.5.7.jar" />
+		<taskdef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml" classpath="${ivy.jar}" />
+
+		<property name="sonar.jar" location="${libs.location}/sonar/sonarqube-ant-task-2.7.0.1612.jar" />
+		<taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml" classpath="${sonar.jar}" />
+	</target>
+
+	<target name="sonar:retrieve" depends="sonar:tasks" if="ivy.configuration.file">
+		<property file="${ivy.configuration.credentials}" />
+		<echo message="Make sure that your credentials for the ivy repository are set if needed." />
+		<ivy:configure file="${ivy.configuration.file}"/>
+		<ivy:resolve file="${sonar.project.ivy}" conf="*" type="jar"/>
+		<ivy:cachepath pathid="sonar.java.libraries.id" conf="*" type="jar" />
+		<pathconvert refid="sonar.java.libraries.id" property="sonar.java.libraries" pathsep="," />
+	</target>
+
+	<target name="sonar:readivy" depends="sonar:tasks" unless="ivy.configuration.file">
+		<xmlproperty file="${sonar.project.ivy}" prefix="sonar.project"/>
+		<property name="ivy.organisation" value="${sonar.project.ivy-module.info(organisation)}"/>
+		<property name="ivy.module" value="${sonar.project.ivy-module.info(module)}"/>
+		<property name="ivy.revision" value="${sonar.project.ivy-module.info(revision)}"/>
+	</target>
+
+	<target name="sonar:analysis" depends="sonar:init, sonar:rules, sonar:tasks, sonar:retrieve, sonar:readivy">
+		<property name="sonar.projectKey" value="${ivy.organisation}:${ivy.module}"/>
+		<property name="sonar.projectVersion" value="${ivy.revision}"/>
+
 		<property name="sonar.language" value="java"/>
-		<property name="sonar.java.source" value="1.7"/> <!-- for PMD plugin compatibility -->
-		
-		<pathconvert property="sonar.sources" refid="project.src.path" pathsep=","/> <!-- Sonar expect ',' separated list of directories -->
-		
-		<!-- launch analysis -->
+		<property name="sonar.java.source" value="1.7"/>
+
 		<sonar:sonar/>
 	</target>
 
