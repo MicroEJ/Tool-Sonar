@@ -9,6 +9,14 @@ and this project adheres to `Semantic Versioning`_.
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantic Versioning: https://semver.org/spec/v2.0.0.html
 
+2.0.1 - 2020-11-19
+------------------
+
+Changed
+~~~~~~~
+
+* Update README.
+
 2.0.0 - 2020-10-06
 ------------------
 
@@ -16,7 +24,9 @@ Changed
 ~~~~~~~
 
 * Server launched manually using Docker.
+* Update to SonarQube 8.4.2.
 * Simplified analysis and parameterized using a properties file.
+* Update rules (add new and modify existing rules severity).
 
 1.2.0 - 2019-02-27
 ------------------
@@ -32,13 +42,13 @@ Removed
 Changed
 ~~~~~~~
 
-* Update to Sonar 5.6.7
-* Update to latest Rules
+* Update to Sonar 5.6.7.
+* Update to latest Rules.
 
 Added
 ~~~~~
 
-* Add process to use sonar on easy ant builds
+* Add process to use sonar on easy ant builds.
 
 1.0.1 - 2017-10-26
 ------------------
@@ -46,7 +56,7 @@ Added
 Fixed
 ~~~~~
 
-* Add Windows-64 in running script
+* Add Windows-64 in running script.
 
 1.0.0 - 2015-06-15
 ------------------
