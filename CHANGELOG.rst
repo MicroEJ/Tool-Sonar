@@ -9,6 +9,20 @@ and this project adheres to `Semantic Versioning`_.
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantic Versioning: https://semver.org/spec/v2.0.0.html
 
+2.0.2 - 2021-08-25
+------------------
+
+Fixed
+~~~~~
+
+* Fix missing properties in some rules (MicroEJ custom ones).
+* Fix docker command line to start the right version of SonarQube.
+
+Changed
+~~~~~~~
+
+* Update license.
+
 2.0.1 - 2020-11-19
 ------------------
 
@@ -64,5 +78,5 @@ Fixed
 * Initial revision.
 
 ..
-  Copyright 2015-2020 MicroEJ Corp. All rights reserved.
+  Copyright 2015-2021 MicroEJ Corp. All rights reserved.
   Use of this source code is governed by a BSD-style license that can be found with this software.
