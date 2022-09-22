@@ -2,7 +2,7 @@
 <!--
 	Ant
 
-	Copyright 2014-2020 MicroEJ Corp. All rights reserved.
+	Copyright 2014-2021 MicroEJ Corp. All rights reserved.
 	Use of this source code is governed by a BSD-style license that can be found with this software.
 -->
 <project name="project.analysis" xmlns:sonar="antlib:org.sonar.ant" xmlns:ivy="antlib:org.apache.ivy.ant" default="sonar:analysis">
@@ -37,13 +37,13 @@
 		</fail>
 	</target>
 
-		
-	<target name="sonar:rules" depends="sonar:properties, sonar:init">
-		<property name="microej.profile.file" location="${ant.dir.project.analysis}/../rules/MicroEJ_rules.xml"/>
-		
-		<!-- Http client -->
+	<target name="sonar:httpclient">
 		<property name="ant-http.jar" location="${libs.location}/ml-ant-http/ml-ant-http-1.1.3.jar" />
 		<taskdef name="http" classname="org.missinglink.ant.task.http.HttpClientTask" classpath="${ant-http.jar}" />
+	</target>
+
+	<target name="sonar:rules" depends="sonar:properties, sonar:init, sonar:httpclient">
+		<property name="microej.profile.file" location="${ant.dir.project.analysis}/../rules/MicroEJ_rules.xml"/>
 
 		<!-- Import MicroEJ profile -->
 		<!-- Create a file with http content headers as long as multipart content is not supported by the ant task -->
@@ -100,7 +100,30 @@ Content-Type: application/octet-stream
 		<property name="ivy.revision" value="${sonar.project.ivy-module.info(revision)}"/>
 	</target>
 
-	<target name="sonar:analysis" depends="sonar:init, sonar:rules, sonar:tasks, sonar:retrieve, sonar:readivy">
+	<target name="sonar:edition" depends="sonar:properties, sonar:init, sonar:httpclient">
+		<!-- The developer edition has more Rest APIs, test one to see the status of the request: 404: community, 400: developer or higher -->
+		<http url="${sonar.host.url}/api/editions/set_license" method="POST" statusProperty="sonar.license.status" failOnUnexpected="false">
+			<credentials username="${sonar.login}" />
+		</http>
+		<condition property="sonar.manage.branch" value="true">
+			<not>
+				<equals arg1="${sonar.license.status}" arg2="404"/>
+			</not>
+		</condition>
+	</target>
+
+	<target name="sonar:git" depends="sonar:edition" if="sonar.manage.branch">
+		<exec executable="git" dir="${sonar.projectBaseDir}" outputproperty="git.output" errorproperty="git.error" resultproperty="git.result">
+			<arg value="rev-parse"/>
+			<arg value="--abbrev-ref"/>
+			<arg value="HEAD"/>
+		</exec>
+		<condition property="sonar.branch.name" value="${git.output}" else="master">
+			<equals arg1="${git.result}" arg2="0"/>
+		</condition>
+	</target>
+
+	<target name="sonar:analysis" depends="sonar:init, sonar:rules, sonar:tasks, sonar:retrieve, sonar:readivy, sonar:git">
 		<property name="sonar.projectKey" value="${ivy.organisation}:${ivy.module}"/>
 		<property name="sonar.projectVersion" value="${ivy.revision}"/>
 

@@ -9,6 +9,26 @@ and this project adheres to `Semantic Versioning`_.
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantic Versioning: https://semver.org/spec/v2.0.0.html
 
+2.1.0 - 2022-09-22
+------------------
+
+Added
+~~~~~
+
+* Manage branches for developer edition and above.
+
+Changed
+~~~~~~~~
+
+* Add rule that verifies that a NOSONAR tag is followed by an explanation.
+* Update rules (add new and remove deprecated ones and erroneous ones).
+
+Fixed
+~~~~~
+
+* Fill properties example with dummy information.
+* Fix JRE version requirement in README (requires JRE8 or later).
+
 2.0.2 - 2021-08-25
 ------------------
 
@@ -78,5 +98,5 @@ Fixed
 * Initial revision.
 
 ..
-  Copyright 2015-2021 MicroEJ Corp. All rights reserved.
+  Copyright 2015-2022 MicroEJ Corp. All rights reserved.
   Use of this source code is governed by a BSD-style license that can be found with this software.

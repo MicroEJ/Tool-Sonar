@@ -11,7 +11,7 @@ SonarQube is available at www.sonarqube.org.
 Requirements
 ------------
 
-- JRE 7 x86 or later.
+- JRE 11 or later.
 
 Project structure
 -----------------
@@ -30,8 +30,8 @@ Run SonarQube server with Docker
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Install Docker following instructions on https://www.docker.com/get-started.
-- Install SonarQube on Docker: ``docker pull sonarqube:8.4.2-community``
-- Run SonarQube instance on Docker: ``docker run -d --name mysonar -p 9000:9000 sonarqube:8.4.2-community``
+- Install SonarQube on Docker: ``docker pull sonarqube:9.4.0-community``
+- Run SonarQube instance on Docker: ``docker run -d --name mysonar -p 9000:9000 sonarqube:9.4.0-community``
 - Once the Docker container is created, it can be:
 
   - stopped: ``docker container stop mysonar``,
@@ -45,9 +45,9 @@ Install necessary plugins
 - Go to *Administration*, *Marketplace*,
 - Install the following plugins:
 
-  - Checkstyle (version 8.35 or later),
-  - Findbugs (version 4.0.1 or later),
-  - PMD (version 3.2.1 or later)
+  - Checkstyle (version 10.2 or later),
+  - Findbugs (version 4.1.5 or later),
+  - PMD (version 3.4.0 or later)
 
 Analysis configuration
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -69,6 +69,16 @@ Launch an analysis
 - The MicroEJ quality profile is automatically added on the server and set as default.
 - The analysis report is then available on your SonarQube server. The URL is printed in the console during the analysis in the form: `ANALYSIS SUCCESSFUL, you can browse http://localhost:9000/dashboard?id=[organisation]:[name]`
 
+Using an alternate JRE for the Ant build
+++++++++++++++++++++++++++++++++++++++++
+
+- Launch MicroEJ.
+- Right-click on **scripts/sonarAnalysis.ant** *->Run as…->External Tools Configurations...*.
+- Open the *JRE* tab.
+- Select *Separate JRE* and select the desired JRE (add one if needed).
+- Click on *Apply* to save the modification.
+- Click on *Run* to start the analysis.
+
 Execute sonar when building project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -84,5 +94,5 @@ MicroEJ's build types can execute sonar when being executed. By default the func
 Now when a MicroEJ project is built using EasyAnt (right-click on the project *-> Build with EasyAnt*), the sonar server will be populated.
 
 ..  
-  Copyright 2015-2020 MicroEJ Corp. All rights reserved.
+  Copyright 2015-2021 MicroEJ Corp. All rights reserved.
   Use of this source code is governed by a BSD-style license that can be found with this software.
