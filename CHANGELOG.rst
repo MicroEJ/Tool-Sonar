@@ -17,6 +17,7 @@ Changed
 
 * Update rules.
 * Update README.
+* Update SonarScanner for Ant.
 
 2.1.0 - 2022-09-22
 ------------------
