@@ -9,6 +9,15 @@ and this project adheres to `Semantic Versioning`_.
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantic Versioning: https://semver.org/spec/v2.0.0.html
 
+2.2.0 - 2024-07-08
+------------------
+
+Changed
+~~~~~~~~
+
+* Update rules.
+* Update README.
+
 2.1.0 - 2022-09-22
 ------------------
 

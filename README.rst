@@ -29,9 +29,9 @@ Usage
 Run SonarQube server with Docker
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Install Docker following instructions on https://www.docker.com/get-started.
-- Install SonarQube on Docker: ``docker pull sonarqube:9.4.0-community``
-- Run SonarQube instance on Docker: ``docker run -d --name mysonar -p 9000:9000 sonarqube:9.4.0-community``
+- Install Docker following instructions on https://docs.docker.com/engine/install/.
+- Install SonarQube on Docker: ``docker pull sonarqube:9.9.2-community``
+- Run SonarQube instance on Docker: ``docker run -d --name mysonar -p 9000:9000 sonarqube:9.9.2-community``
 - Once the Docker container is created, it can be:
 
   - stopped: ``docker container stop mysonar``,
