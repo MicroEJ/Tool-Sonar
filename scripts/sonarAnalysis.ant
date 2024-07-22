@@ -80,7 +80,7 @@ Content-Type: application/octet-stream
 		<property name="ivy.jar" location="${libs.location}/ivy/ivy-2.5.7.jar" />
 		<taskdef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml" classpath="${ivy.jar}" />
 
-		<property name="sonar.jar" location="${libs.location}/sonar/sonarqube-ant-task-2.7.1.1951.jar" />
+		<property name="sonar.jar" location="${libs.location}/sonar/sonarqube-ant-task-2.7.0.1612.jar" />
 		<taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml" classpath="${sonar.jar}" />
 	</target>
 
