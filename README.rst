@@ -19,7 +19,8 @@ Run SonarQube server with Docker
 
 - Install Docker following the instructions on https://docs.docker.com/engine/install/.
 - Pull the SonarQube Docker image: ``docker pull sonarqube:10.6.0-community``.
-- Run a SonarQube instance on Docker: ``docker run -d --name sonarqube -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:10.6.0-community``.
+- Create a Docker Container network: ``docker network create sonar``.
+- Run a SonarQube instance on Docker: ``docker run -d --name sonarqube --network sonar -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -p 9000:9000 sonarqube:10.6.0-community``.
 - Once your instance is up and running, log in to http://localhost:9000 using System Administrator credentials (admin/admin).
 
 Create your token 
@@ -98,7 +99,9 @@ With IntelliJ
 Run Sonar Scanner and upload report
 ***********************************
 
-If you want to upload the analysis report to your Sonar server, you need to run Sonar Scanner. We will use the Sonar Scanner Docker image for this, but you can also install Sonar Scanner for your OS here: https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/scanners/sonarscanner/.
+If you want to upload the analysis report to your Sonar server, you need to run Sonar Scanner. 
+We will use the Sonar Scanner Docker image for this, but you can also install Sonar Scanner for your OS here:
+https://docs.sonarsource.com/sonarqube/latest/analyzing-source-code/scanners/sonarscanner/.
 
 - Create a configuration file in your project's root directory called ``sonar-project.properties``:
 
@@ -106,7 +109,10 @@ If you want to upload the analysis report to your Sonar server, you need to run 
 
   # must be unique in a given SonarQube instance
   sonar.projectKey=myProject
-  sonar.token=<myUserToken>
+  sonar.login=<myUserToken>
+  
+  # For MICROEJ SDK 6, specify the path to the compiled classes (e.g build/classes)
+  sonar.java.binaries=build/classes
 
   # --- optional properties ---
 
@@ -121,19 +127,42 @@ If you want to upload the analysis report to your Sonar server, you need to run 
   # Encoding of the source code. Default is default system encoding
   #sonar.sourceEncoding=UTF-8
 
-- Launch a Docker container:
+- For MICROEJ SDK6, it is necessary to compile the project classes:
+
+  - In the Gradle tasks view of the project, run the ``classes`` task (``Tasks > build > classes``).
+
+- Launch Sonar Scanner in a Docker container to perform the analysis:
 
 .. code-block::
 
   docker run \
       --rm \
+      --network sonar \
       -e SONAR_HOST_URL="http://${SONARQUBE_URL}"  \
       -v "${YOUR_REPO}:/usr/src" \
       sonarsource/sonar-scanner-cli:10
-  
+
 - If the analysis is successful, it is now available on your Sonar server.
 
-    
+
+Troubleshooting
+===============
+
+Sonar Analysis Exception
+------------------------
+
+.. code-block::
+
+  org.sonar.java.AnalysisException: Your project contains .java files,
+  please provide compiled classes with sonar.java.binaries property, 
+  or exclude them from the analysis with sonar.exclusions property.
+
+If the above exception shows up, make sure that the project classes
+have been properly compiled (``.class`` files generated).
+
+Additionally, ensure that the ``sonar.java.binaries`` property is defined in
+``sonar-project.properties`` and that it points to the folder containing the compiled classes.
+
 ..  
   Copyright 2015-2024 MicroEJ Corp. All rights reserved.
   Use of this source code is governed by a BSD-style license that can be found with this software.
