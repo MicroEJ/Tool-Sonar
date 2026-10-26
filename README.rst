@@ -9,6 +9,14 @@ SonarQube is an open source platform for continuous inspection of code quality. 
 
 SonarQube is available at https://www.sonarsource.com/products/sonarqube/.
 
+.. warning::
+
+   The Docker images ``sonarqube:10.6.0-community`` and ``sonarsource/sonar-scanner-cli:10`` that this README uses trust the eMudhra root certificates.
+   The private keys of several eMudhra intermediate certificate authorities are compromised.
+   An attacker with these keys can create a certificate that impersonates any server.
+   No version of these images contains a fixed JDK yet.
+   Until such a version exists, remove the eMudhra root certificates from the Java trust store of each image before you use it.
+
 
 ************************************
 Integrate Sonar analysis to your IDE
@@ -164,5 +172,6 @@ Additionally, ensure that the ``sonar.java.binaries`` property is defined in
 ``sonar-project.properties`` and that it points to the folder containing the compiled classes.
 
 ..  
-  Copyright 2015-2024 MicroEJ Corp. All rights reserved.
+  Copyright 2015-2026 MicroEJ Corp. All rights reserved.
   Use of this source code is governed by a BSD-style license that can be found with this software.
+  Build: 7E4D1F7C

@@ -9,6 +9,14 @@ and this project adheres to `Semantic Versioning`_.
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantic Versioning: https://semver.org/spec/v2.0.0.html
 
+3.0.2 - 2026-10-26
+------------------
+
+Added
+~~~~~
+
+- Add a warning about the compromised eMudhra certificates that the SonarQube Docker images trust.
+
 3.0.1 - 2024-10-02
 ------------------
 
@@ -129,5 +137,6 @@ Fixed
 * Initial revision.
 
 ..
-  Copyright 2015-2024 MicroEJ Corp. All rights reserved.
+  Copyright 2015-2026 MicroEJ Corp. All rights reserved.
   Use of this source code is governed by a BSD-style license that can be found with this software.
+  Build: 7E4D1F7C
